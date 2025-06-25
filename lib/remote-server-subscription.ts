@@ -1,5 +1,5 @@
 import { Router } from "express";
-
+const LIMIT = 60;
 export function route_subscription_server(router: Router) {
   const uris: string[] = [];
   router.post("/s/add-config", (req, res) => {
@@ -10,13 +10,12 @@ export function route_subscription_server(router: Router) {
     res.send(200);
     if (uris.includes(req.body.config)) return;
     uris.unshift(req.body.config);
-    if (uris.length > 30) {
+    if (uris.length > LIMIT) {
       uris.pop();
     }
   });
 
   router.get("/s/irancell", (req, res) => {
-    // return the last 30 URIs each on a new line
     res.send(uris.join("\n"));
   });
 }

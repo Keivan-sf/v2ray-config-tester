@@ -8,6 +8,7 @@ export function route_subscription_server(router: Router) {
       return;
     }
     res.send(200);
+    if (uris.includes(req.body.config)) return;
     uris.unshift(req.body.config);
     if (uris.length > 30) {
       uris.pop();

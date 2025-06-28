@@ -22,8 +22,10 @@ export function is_config_ok(config_uri: string): Promise<boolean> {
 
 async function tester_finished_cb() {
   if (config_queue.length > 0) {
+    currently_testing++;
     const job = config_queue.shift()!;
     is_config_ok_wo_q(job.config).then((r) => {
+      currently_testing--;
       job.resolve(r);
       tester_finished_cb();
     });

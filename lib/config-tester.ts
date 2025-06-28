@@ -8,7 +8,6 @@ const SOCKS5_PORT = 4010;
 export async function is_config_ok_wo_q(config_uri: string): Promise<boolean> {
   try {
     const v2_parser_binary = path.resolve(getRootDir(), "v2parser");
-
     const config_raw = execSync(
       `${v2_parser_binary} "${config_uri}" --socksport ${SOCKS5_PORT}`,
     ).toString();
@@ -20,6 +19,7 @@ export async function is_config_ok_wo_q(config_uri: string): Promise<boolean> {
     xray_process.kill();
     return result;
   } catch (err) {
+    console.log("FAILED parser/xray with this config:", config_uri);
     return false;
   }
 }
@@ -78,11 +78,29 @@ async function wait_for_xray_core(
 async function is_socks5_connected(port: number) {
   try {
     let is_fulfilled = false;
+
+    let out_data = "";
     await new Promise((resolve, reject) => {
+      // const process = $.spawn(
+      //   "curl",
+      //   `-x socks5://127.0.0.1:${port} -m 5 http://cp.cloudflare.com/`.split(" "),
+      // );
       const process = $.spawn(
         "curl",
-        `-x socks5://127.0.0.1:${port} http://cp.cloudflare.com/`.split(" "),
+        `-x socks5://127.0.0.1:${port} -m 5 https://dns.google.com/resolve?name=google.com`.split(
+          " ",
+        ),
       );
+      process.stdout.on("data", (data) => {
+        const out = data.toString();
+        if (out.toLowerCase().includes("curl:")) {
+          is_fulfilled = true;
+          reject(out);
+        }
+        out_data += data;
+        // console.log(data);
+      });
+
       process.stderr.on("data", (data) => {
         const out = data.toString();
         if (out.toLowerCase().includes("curl:")) {
@@ -96,6 +114,11 @@ async function is_socks5_connected(port: number) {
         resolve(true);
       });
     });
+    if (!out_data.trim()) {
+      console.log(false, "AFTER TRIM AFTER TRIM");
+      return false;
+    }
+    console.log("true with:", out_data);
     return true;
   } catch (err) {
     return false;

@@ -1,7 +1,7 @@
 import { Router } from "express";
 const LIMIT = 60;
+const uris: string[] = [];
 export function route_subscription_server(router: Router) {
-  const uris: string[] = [];
   router.post("/s/add-config", (req, res) => {
     if (!req.body.config || typeof req.body.config != "string") {
       res.status(400);

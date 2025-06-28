@@ -2,7 +2,8 @@ import express from "express";
 import "dotenv/config";
 const app = express();
 const PORT = +process.env.PORT!;
-const REMOTE_END_POINT = process.env.REMOTE_END_POINT!;
+const LOCAL_END_POINT = process.env.LOCAL_END_POINT!;
+const REMOTE_END_POINT = process.env.REMOTE_END_POINT;
 import { getRootDir, setRootDir } from "./lib/dirname";
 import path from "path";
 import { is_config_ok } from "./lib/config-tester-q";
@@ -11,6 +12,23 @@ import { route_subscription_server } from "./lib/remote-server-subscription";
 app.use(express.json());
 setRootDir(path.resolve(process.cwd()));
 console.log("root dir:", getRootDir());
+
+async function addConfigToSub(
+  config_uri: string,
+  local?: string,
+  remote?: string,
+) {
+  if (local) {
+    axios.post(local, { config: config_uri }).catch((err) => {
+      console.log("[warning] failed to send config to local end", err);
+    });
+  }
+  if (remote) {
+    axios.post(remote, { config: config_uri }).catch((err) => {
+      console.log("[warning] failed to send config to remote end", err);
+    });
+  }
+}
 
 async function main() {
   app.post("/add-config", async (req, res) => {
@@ -23,9 +41,11 @@ async function main() {
     const result = await is_config_ok(config_uri);
     console.log("is_config_ok:", result);
     if (result) {
-      axios.post(REMOTE_END_POINT, { config: config_uri }).catch((err) => {
+      axios.post(LOCAL_END_POINT, { config: config_uri }).catch((err) => {
         console.log("[warning] failed to send config to remote end", err);
       });
+
+      addConfigToSub(config_uri, LOCAL_END_POINT, REMOTE_END_POINT);
     }
   });
   route_subscription_server(app);
@@ -33,5 +53,7 @@ async function main() {
     console.log(`APP IS LITENING ON PORT ${PORT}`);
   });
 }
+
+async function addConfig(remote: boolean) {}
 
 main();

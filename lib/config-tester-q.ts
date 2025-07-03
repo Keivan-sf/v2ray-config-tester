@@ -1,11 +1,14 @@
 import { is_config_ok_wo_q } from "./config-tester";
+import "dotenv/config";
 const config_queue: { resolve: (value: boolean) => void; config: string }[] =
   [];
+
+const CONCURRENT_TESTS = Number(process.env.CONCURRENT_TESTS ?? 1);
 let currently_testing = 0;
 
 export function is_config_ok(config_uri: string): Promise<boolean> {
   return new Promise((resolve, reject) => {
-    if (currently_testing < 1) {
+    if (currently_testing < CONCURRENT_TESTS) {
       currently_testing++;
       is_config_ok_wo_q(config_uri).then((r) => {
         currently_testing--;

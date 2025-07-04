@@ -1,5 +1,5 @@
 .configs
 node_modules
 .env
-test.ts
+server-tests.ts
 v2parser

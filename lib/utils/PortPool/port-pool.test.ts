@@ -22,4 +22,10 @@ describe("Port pool", () => {
     const another_port = await pool.getPort();
     expect(another_port).toBe(4010);
   });
+
+  it("should throw on invalid port ranges", () => {
+    expect(() => new PortPool(-1, 100)).toThrow();
+    expect(() => new PortPool(1, 65536)).toThrow();
+    expect(() => new PortPool(100, 10)).toThrow();
+  });
 });

@@ -5,6 +5,9 @@ export class PortPool {
     private start: number,
     private end: number,
   ) {
+    if (start > end || start < 0 || end > 65535) {
+      throw new Error("invalid port range");
+    }
     for (let i = start; i <= end; i++) {
       this.ports[i] = "free";
     }

@@ -3,22 +3,31 @@ import { getRootDir } from "./dirname";
 import { execSync } from "child_process";
 import fs from "fs/promises";
 import * as $ from "node:child_process";
-const SOCKS5_PORT = 4010;
+import { PortPool } from "./utils/PortPool/port-pool";
+
+const PORT_RANGE_START = Number(process.env.PORT_RANGE_START ?? 4010);
+const PORT_RANGE_END = Number(process.env.PORT_RANGE_END ?? 4020);
+
+const port_pool = new PortPool(PORT_RANGE_START, PORT_RANGE_END);
 
 export async function is_config_ok_wo_q(config_uri: string): Promise<boolean> {
+  let socks_port;
   try {
+    socks_port = await port_pool.getPort();
     const v2_parser_binary = path.resolve(getRootDir(), "v2parser");
     const config_raw = execSync(
-      `${v2_parser_binary} "${config_uri}" --socksport ${SOCKS5_PORT}`,
+      `${v2_parser_binary} "${config_uri}" --socksport ${socks_port}`,
     ).toString();
     const config_path = await create_json_file("4010", config_raw);
     const xray_process = await spawn_xray_process(config_path);
     console.log("we spawned xray core");
     await wait_for_xray_core(xray_process);
-    const result = await is_socks5_connected(SOCKS5_PORT);
+    const result = await is_socks5_connected(socks_port);
     xray_process.kill();
+    port_pool.free(socks_port);
     return result;
   } catch (err) {
+    if (socks_port) port_pool.free(socks_port);
     console.log("FAILED parser/xray with this config:", config_uri);
     return false;
   }

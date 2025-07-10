@@ -5,7 +5,7 @@ const config_queue: { resolve: (value: boolean) => void; config: string }[] =
 
 const CONCURRENT_TESTS = process.env.CONCURRENT_TESTS
   ? +process.env.CONCURRENT_TESTS
-  : 1;
+  : 5;
 let currently_testing = 0;
 
 export function is_config_ok(config_uri: string): Promise<boolean> {

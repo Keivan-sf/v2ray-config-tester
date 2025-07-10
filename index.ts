@@ -4,8 +4,9 @@ const app = express();
 const PORT = process.env.PORT ? +process.env.PORT : 5574;
 const LOCAL_END_POINT = `http://127.0.0.1:${PORT}/s/add-config`;
 const REMOTE_END_POINT = process.env.REMOTE_END_POINT;
-import { setRootDir } from "./lib/dirname";
+import { getRootDir, setRootDir } from "./lib/dirname";
 import path from "path";
+import * as fs from "fs/promises";
 import { is_config_ok } from "./lib/config-tester-q";
 import axios from "axios";
 import { route_subscription_server } from "./lib/local-server-subscription";
@@ -30,6 +31,7 @@ async function addConfigToSub(
 }
 
 async function main() {
+  await fs.mkdir(`${getRootDir()}/.configs`, { recursive: true });
   app.post("/add-config", async (req, res) => {
     if (!req.body.config || typeof req.body.config != "string") {
       res.status(400);

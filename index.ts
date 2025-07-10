@@ -1,8 +1,9 @@
 import express from "express";
 import "dotenv/config";
 const app = express();
-const PORT = +process.env.PORT!;
-const LOCAL_END_POINT = process.env.LOCAL_END_POINT!;
+const PORT = process.env.PORT ? +process.env.PORT : 5574;
+const LOCAL_END_POINT =
+  process.env.LOCAL_END_POINT ?? "http://127.0.0.1:5574/s/add-config";
 const REMOTE_END_POINT = process.env.REMOTE_END_POINT;
 import { getRootDir, setRootDir } from "./lib/dirname";
 import path from "path";

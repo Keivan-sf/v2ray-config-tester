@@ -5,8 +5,12 @@ import fs from "fs/promises";
 import * as $ from "node:child_process";
 import { PortPool } from "./utils/PortPool/port-pool";
 
-const PORT_RANGE_START = Number(process.env.PORT_RANGE_START ?? 4010);
-const PORT_RANGE_END = Number(process.env.PORT_RANGE_END ?? 4020);
+const PORT_RANGE_START = process.env.PORT_RANGE_START
+  ? +process.env.PORT_RANGE_START
+  : 4010;
+const PORT_RANGE_END = process.env.PORT_RANGE_END
+  ? +process.env.PORT_RANGE_END
+  : 4020;
 
 const port_pool = new PortPool(PORT_RANGE_START, PORT_RANGE_END);
 

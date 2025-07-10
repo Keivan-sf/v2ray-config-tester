@@ -3,7 +3,9 @@ import "dotenv/config";
 const config_queue: { resolve: (value: boolean) => void; config: string }[] =
   [];
 
-const CONCURRENT_TESTS = Number(process.env.CONCURRENT_TESTS ?? 1);
+const CONCURRENT_TESTS = process.env.CONCURRENT_TESTS
+  ? +process.env.CONCURRENT_TESTS
+  : 1;
 let currently_testing = 0;
 
 export function is_config_ok(config_uri: string): Promise<boolean> {
@@ -19,8 +21,6 @@ export function is_config_ok(config_uri: string): Promise<boolean> {
       config_queue.push({ resolve, config: config_uri });
     }
   });
-
-  // is_config_ok_without_queue()
 }
 
 async function tester_finished_cb() {

@@ -18,7 +18,7 @@ export async function is_config_ok_wo_q(config_uri: string): Promise<boolean> {
     const config_raw = execSync(
       `${v2_parser_binary} "${config_uri}" --socksport ${socks_port}`,
     ).toString();
-    const config_path = await create_json_file("4010", config_raw);
+    const config_path = await create_json_file(`${socks_port}`, config_raw);
     const xray_process = await spawn_xray_process(config_path);
     console.log("we spawned xray core");
     await wait_for_xray_core(xray_process);

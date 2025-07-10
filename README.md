@@ -19,7 +19,7 @@ pnpm install
 ```
 Then download the latest [v2-uri-parser](https://github.com/Keivan-sf/v2-uri-parser) inside the root directory of the project and make it executable:
 ```bash
-wget https://github.com/Keivan-sf/v2-uri-parser/releases/download/v0.1.1/v2parser && chmod +x v2-uri-parser
+wget https://github.com/Keivan-sf/v2-uri-parser/releases/download/v0.1.1/v2parser && chmod +x ./v2parser
 ```
 
 You can now run the application which by default runs on port `5574`:

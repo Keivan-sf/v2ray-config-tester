@@ -24,7 +24,6 @@ export async function is_config_ok_wo_q(config_uri: string): Promise<boolean> {
     ).toString();
     const config_path = await create_json_file(`${socks_port}`, config_raw);
     const xray_process = await spawn_xray_process(config_path);
-    console.log("we spawned xray core");
     await wait_for_xray_core(xray_process);
     const result = await is_socks5_connected(socks_port);
     xray_process.kill();
@@ -111,7 +110,6 @@ async function is_socks5_connected(port: number) {
           reject(out);
         }
         out_data += data;
-        // console.log(data);
       });
 
       process.stderr.on("data", (data) => {
@@ -128,10 +126,8 @@ async function is_socks5_connected(port: number) {
       });
     });
     if (!out_data.trim()) {
-      console.log(false, "AFTER TRIM AFTER TRIM");
       return false;
     }
-    console.log("true with:", out_data);
     return true;
   } catch (err) {
     return false;

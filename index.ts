@@ -12,7 +12,6 @@ import axios from "axios";
 import { route_subscription_server } from "./lib/remote-server-subscription";
 app.use(express.json());
 setRootDir(path.resolve(process.cwd()));
-console.log("root dir:", getRootDir());
 
 async function addConfigToSub(
   config_uri: string,
@@ -42,10 +41,6 @@ async function main() {
     const result = await is_config_ok(config_uri);
     console.log("is_config_ok:", result);
     if (result) {
-      axios.post(LOCAL_END_POINT, { config: config_uri }).catch((err) => {
-        console.log("[warning] failed to send config to remote end", err);
-      });
-
       addConfigToSub(config_uri, LOCAL_END_POINT, REMOTE_END_POINT);
     }
   });
@@ -54,7 +49,5 @@ async function main() {
     console.log(`APP IS LITENING ON PORT ${PORT}`);
   });
 }
-
-async function addConfig(remote: boolean) {}
 
 main();

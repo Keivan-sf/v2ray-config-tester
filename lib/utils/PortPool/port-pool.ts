@@ -11,7 +11,6 @@ export class PortPool {
     for (let i = start; i <= end; i++) {
       this.ports[i] = "free";
     }
-    console.log("ports:", this.ports);
   }
 
   free(port: number) {

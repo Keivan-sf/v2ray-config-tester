@@ -8,12 +8,12 @@ The app exposes a route `/add-config` which accepts a post request with the foll
   config: string;
 }
 ```
-Then the config is tested, and if it passess the connectivity check, it will be avaialbe via `/s/configs` which acts as a subscription link and always shows the last 60 configs which have passed the connectivity check
+Then the config is tested, and if it passes the connectivity check, it will be available via `/s/configs` which acts as a subscription link and always shows the last 60 configs which have passed the connectivity check
 
-tldr; - Send your configs to `/add-config` and put `/s/configs` as a subscription link in your client
+**tldr;** - Send your configs to `/add-config` and put `/s/configs` as a subscription link in your client
 
 ## How to run
-Clone the reposity and install the dependencies:
+Clone the repository and install the dependencies:
 ```bash
 pnpm install
 ```

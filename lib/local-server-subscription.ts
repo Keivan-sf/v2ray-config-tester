@@ -15,7 +15,7 @@ export function route_subscription_server(router: Router) {
     }
   });
 
-  router.get("/s/irancell", (req, res) => {
+  router.get("/s/configs", (req, res) => {
     res.send(uris.join("\n"));
   });
 }

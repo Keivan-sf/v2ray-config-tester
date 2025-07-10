@@ -2,14 +2,13 @@ import express from "express";
 import "dotenv/config";
 const app = express();
 const PORT = process.env.PORT ? +process.env.PORT : 5574;
-const LOCAL_END_POINT =
-  process.env.LOCAL_END_POINT ?? "http://127.0.0.1:5574/s/add-config";
+const LOCAL_END_POINT = `http://127.0.0.1:${PORT}/s/add-config`;
 const REMOTE_END_POINT = process.env.REMOTE_END_POINT;
-import { getRootDir, setRootDir } from "./lib/dirname";
+import { setRootDir } from "./lib/dirname";
 import path from "path";
 import { is_config_ok } from "./lib/config-tester-q";
 import axios from "axios";
-import { route_subscription_server } from "./lib/remote-server-subscription";
+import { route_subscription_server } from "./lib/local-server-subscription";
 app.use(express.json());
 setRootDir(path.resolve(process.cwd()));
 
